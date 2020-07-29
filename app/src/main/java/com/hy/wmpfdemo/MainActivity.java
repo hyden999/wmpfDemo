@@ -150,36 +150,40 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void authorizeFaceLogin(final WxFacePayBean wxFacePayBean, final String authInfo) {
-        ApiUtils.INSTANCE.authorizeFaceLogin(this, wxFacePayBean, authInfo, new WmHttpListener<String>() {
-            @Override
-            public void onSuccess(String data) {
-                DLog.e("wmpf authorizeFaceLogin: " + data);
-                if (!TextUtils.isEmpty(data)) {
-                    JSONObject obj = JSON.parseObject(data);
-                    String openid = obj.getString("openid");
-                    String nickname = obj.getString("nickname");
-                    ApiUtils.INSTANCE.setOpen_id(openid);
-                    ApiUtils.INSTANCE.setNickname(nickname);
+        //TODO 替换店铺id
+        String store_id = "";
+        ApiUtils.INSTANCE.authorizeFaceLogin(this, wxFacePayBean,
+                store_id,
+                authInfo, new WmHttpListener<String>() {
+                    @Override
+                    public void onSuccess(String data) {
+                        DLog.e("wmpf authorizeFaceLogin: " + data);
+                        if (!TextUtils.isEmpty(data)) {
+                            JSONObject obj = JSON.parseObject(data);
+                            String openid = obj.getString("openid");
+                            String nickname = obj.getString("nickname");
+                            ApiUtils.INSTANCE.setOpen_id(openid);
+                            ApiUtils.INSTANCE.setNickname(nickname);
 
-                    //启动小程序
-                    ApiUtils.INSTANCE.launchWxaApp(new WmHttpListener<String>() {
-                        @Override
-                        public void onSuccess(String data) {
+                            //启动小程序
+                            ApiUtils.INSTANCE.launchWxaApp(new WmHttpListener<String>() {
+                                @Override
+                                public void onSuccess(String data) {
+                                }
+
+                                @Override
+                                public void onFail(@NotNull String msg) {
+                                }
+                            });
+                        } else {
                         }
+                    }
 
-                        @Override
-                        public void onFail(@NotNull String msg) {
-                        }
-                    });
-                } else {
-                }
-            }
-
-            @Override
-            public void onFail(@NotNull String msg) {
-                DLog.e("authorizeFaceLogin onFail：" + msg);
-            }
-        });
+                    @Override
+                    public void onFail(@NotNull String msg) {
+                        DLog.e("authorizeFaceLogin onFail：" + msg);
+                    }
+                });
     }
 
     /**

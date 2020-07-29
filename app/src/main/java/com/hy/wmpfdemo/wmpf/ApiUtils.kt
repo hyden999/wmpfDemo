@@ -29,8 +29,6 @@ object ApiUtils {
     var open_id = ""
     var nickname = ""
 
-    val store_id = ""
-
     fun getWxParameters(listener: WmHttpListener<String>) {
         //TODO 从公司服务端获取的微信刷脸参数
         ViseHttp.POST("")
@@ -160,7 +158,7 @@ object ApiUtils {
     /**
      * 注入人脸登录信息
      */
-    fun initWxPayInfoAuthInfo(context: Context, appid: String, mch_id: String, authinfo: String,
+    fun initWxPayInfoAuthInfo(context: Context, appid: String, mch_id: String, store_id: String, authinfo: String,
                               listener: WmHttpListener<String>) {
         Api.initWxPayInfoAuthInfo(mapOf(
                 "face_authtype" to "FACEPAY" as Any,
@@ -361,10 +359,11 @@ object ApiUtils {
     /**
      * 调起小程序刷脸
      */
-    fun authorizeFaceLogin(context: Context, wxFacePayBean: WxFacePayBean, authInfo: String, listener: WmHttpListener<String>) {
+    fun authorizeFaceLogin(context: Context, wxFacePayBean: WxFacePayBean, store_id: String, authInfo: String, listener: WmHttpListener<String>) {
         initWxPayInfoAuthInfo(context,
                 DeviceInfo.WMP_APP_ID, //商户号绑定的公众号/小程序
                 wxFacePayBean.wxFaceParam.mch_id,
+                store_id,
                 authInfo, object : WmHttpListener<String> {
             override fun onSuccess(data: String) {
                 authorizeFaceLogin(object : WmHttpListener<String> {
